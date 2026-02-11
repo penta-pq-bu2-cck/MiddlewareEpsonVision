@@ -183,8 +183,8 @@ namespace MiddlewareEpsonVision
             m_spel = new Spel();
             UiLogger.Log("Robot RC Initializing");
             m_spel.Initialize();
-            UiLogger.Log("Read Robot Project File C:\\EpsonRC70\\projects\\DandyGlazing_TYP_260114_2 and connect to it...");
-            m_spel.Project = "C:\\EpsonRC70\\projects\\DandyGlazing_TYP_260114_2\\DandyGlazing_TYP_260114_2.sprj";
+            UiLogger.Log("Read Robot Project File C:\\EpsonRC70\\projects\\xxxxx and connect to it...");
+            m_spel.Project = "C:\\EpsonRC70\\projects\\xxxxxx\\xxxxx.sprj";
 
             // Set number of points to Global Preserve Integer gPI_numberofvpoint
             UiLogger.Log("Set number of points to Global Preserve Integer gPI_numberofvpoint");
