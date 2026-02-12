@@ -49,9 +49,9 @@
             this.txtBox_mmIP = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.changelogDisplay = new System.Windows.Forms.RichTextBox();
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -62,7 +62,6 @@
             // 
             // button1
             // 
-            this.button1.Enabled = false;
             this.button1.Location = new System.Drawing.Point(8, 378);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(95, 38);
@@ -258,10 +257,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "MechMind IP Address";
             // 
-            // backgroundWorker1
-            // 
-            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.changelogDisplay);
@@ -281,6 +276,10 @@
             this.changelogDisplay.Size = new System.Drawing.Size(786, 418);
             this.changelogDisplay.TabIndex = 0;
             this.changelogDisplay.Text = "";
+            // 
+            // backgroundWorker1
+            // 
+            this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             // 
             // Form1
             // 
