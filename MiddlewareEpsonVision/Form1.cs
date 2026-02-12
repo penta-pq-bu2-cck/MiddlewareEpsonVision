@@ -61,7 +61,7 @@ namespace MiddlewareEpsonVision
 
             UiLogger.Log($"Points parsed: {points.Count} Saved to: {ptsFile}");
 
-            UpdatetoRobotRC(points);
+            //UpdatetoRobotRC(points);
         }
 
         public List<RobotPoint> ParseRawData(string rawData)
@@ -264,7 +264,7 @@ namespace MiddlewareEpsonVision
 
                 UiLogger.Log($"Points parsed: {points.Count} Saved to: {ptsFile}");
 
-                UpdatetoRobotRC(points);
+               // UpdatetoRobotRC(points);
             }
             catch (Exception ex)
             {
