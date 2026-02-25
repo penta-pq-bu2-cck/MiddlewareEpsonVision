@@ -439,7 +439,7 @@ namespace MiddlewareEpsonVision
 
         private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            UiLogger.Log("Worker stopped. Restarting to wait for new client...");
+            UiLogger.Log("Service stopped. Restarting to wait for new client...");
 
             Thread.Sleep(500); // optional small delay
 
