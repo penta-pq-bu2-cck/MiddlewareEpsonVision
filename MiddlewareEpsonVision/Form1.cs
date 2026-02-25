@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -298,22 +299,37 @@ namespace MiddlewareEpsonVision
 
         private void backgroundWorker1_DoWork(object sender, DoWorkEventArgs e)
         {
-            _robotServer = new TcpServer();
-            _robotServer.Start(410);
-
-            UiLogger.Log("TCP Robot Server started on port 410");
-
-            while (true)
+            try
             {
-                string msg = _robotServer.Listen();
-                UiLogger.Log("Received: " + msg);
+                _robotServer = new TcpServer();
+                _robotServer.Start(410);
 
-                string[] cmdArray = msg.Trim().Split(',');
+                UiLogger.Log("TCP Robot Server started on port 410");
 
-                if (cmdArray.Length > 0 && cmdArray[0] == "gettoolpath")
+                while (true)
                 {
-                    HandleGetToolPath(cmdArray);
+                    string msg = _robotServer.Listen(); // will throw if client disconnects
+                    UiLogger.Log("Received: " + msg);
+
+                    string[] cmdArray = msg.Trim().Split(',');
+
+                    if (cmdArray.Length > 0 && cmdArray[0] == "gettoolpath")
+                    {
+                        HandleGetToolPath(cmdArray);
+                    }
                 }
+            }
+            catch (IOException)
+            {
+                UiLogger.Log("Client disconnected.");
+            }
+            catch (Exception ex)
+            {
+                UiLogger.Log("Server error: " + ex.Message);
+            }
+            finally
+            {
+                _robotServer?.Dispose();
             }
         }
 
@@ -419,6 +435,18 @@ namespace MiddlewareEpsonVision
             {
                 action();
             }
+        }
+
+        private void backgroundWorker1_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            UiLogger.Log("Worker stopped. Restarting to wait for new client...");
+
+            Thread.Sleep(500); // optional small delay
+
+            backgroundWorker1 = new BackgroundWorker();
+            backgroundWorker1.DoWork += backgroundWorker1_DoWork;
+            backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
+            backgroundWorker1.RunWorkerAsync();
         }
     }
 }
