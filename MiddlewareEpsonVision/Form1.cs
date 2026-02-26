@@ -395,7 +395,7 @@ namespace MiddlewareEpsonVision
         {
             string[] parts = msg.Trim().Split(',');
 
-            if (parts.Length != 7 || !parts[0].Equals("Move", StringComparison.OrdinalIgnoreCase))
+            if (parts.Length != 8 || !parts[0].Equals("Move", StringComparison.OrdinalIgnoreCase))
                 throw new Exception("Invalid MOVE command: " + msg);
 
                return new decimal[]
