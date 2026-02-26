@@ -35,13 +35,6 @@
             this.button2 = new System.Windows.Forms.Button();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.Point = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Z = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.U = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.V = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.W = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.txtBox_mmPort = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
@@ -52,6 +45,14 @@
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.changelogDisplay = new System.Windows.Forms.RichTextBox();
             this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.Point = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.X = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Y = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Z = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.U = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.V = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.W = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.SprayerStatus = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
@@ -138,55 +139,14 @@
             this.Z,
             this.U,
             this.V,
-            this.W});
+            this.W,
+            this.SprayerStatus});
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(3, 3);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.ReadOnly = true;
             this.dataGridView1.Size = new System.Drawing.Size(786, 418);
             this.dataGridView1.TabIndex = 0;
-            // 
-            // Point
-            // 
-            this.Point.HeaderText = "Point";
-            this.Point.Name = "Point";
-            this.Point.ReadOnly = true;
-            // 
-            // X
-            // 
-            this.X.HeaderText = "X";
-            this.X.Name = "X";
-            this.X.ReadOnly = true;
-            // 
-            // Y
-            // 
-            this.Y.HeaderText = "Y";
-            this.Y.Name = "Y";
-            this.Y.ReadOnly = true;
-            // 
-            // Z
-            // 
-            this.Z.HeaderText = "Z";
-            this.Z.Name = "Z";
-            this.Z.ReadOnly = true;
-            // 
-            // U
-            // 
-            this.U.HeaderText = "U";
-            this.U.Name = "U";
-            this.U.ReadOnly = true;
-            // 
-            // V
-            // 
-            this.V.HeaderText = "V";
-            this.V.Name = "V";
-            this.V.ReadOnly = true;
-            // 
-            // W
-            // 
-            this.W.HeaderText = "W";
-            this.W.Name = "W";
-            this.W.ReadOnly = true;
             // 
             // tabPage3
             // 
@@ -281,6 +241,54 @@
             this.backgroundWorker1.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker1_DoWork);
             this.backgroundWorker1.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backgroundWorker1_RunWorkerCompleted);
             // 
+            // Point
+            // 
+            this.Point.HeaderText = "Point";
+            this.Point.Name = "Point";
+            this.Point.ReadOnly = true;
+            // 
+            // X
+            // 
+            this.X.HeaderText = "X";
+            this.X.Name = "X";
+            this.X.ReadOnly = true;
+            // 
+            // Y
+            // 
+            this.Y.HeaderText = "Y";
+            this.Y.Name = "Y";
+            this.Y.ReadOnly = true;
+            // 
+            // Z
+            // 
+            this.Z.HeaderText = "Z";
+            this.Z.Name = "Z";
+            this.Z.ReadOnly = true;
+            // 
+            // U
+            // 
+            this.U.HeaderText = "U";
+            this.U.Name = "U";
+            this.U.ReadOnly = true;
+            // 
+            // V
+            // 
+            this.V.HeaderText = "V";
+            this.V.Name = "V";
+            this.V.ReadOnly = true;
+            // 
+            // W
+            // 
+            this.W.HeaderText = "W";
+            this.W.Name = "W";
+            this.W.ReadOnly = true;
+            // 
+            // SprayerStatus
+            // 
+            this.SprayerStatus.HeaderText = "SprayerStatus";
+            this.SprayerStatus.Name = "SprayerStatus";
+            this.SprayerStatus.ReadOnly = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -311,13 +319,6 @@
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Point;
-        private System.Windows.Forms.DataGridViewTextBoxColumn X;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Y;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Z;
-        private System.Windows.Forms.DataGridViewTextBoxColumn U;
-        private System.Windows.Forms.DataGridViewTextBoxColumn V;
-        private System.Windows.Forms.DataGridViewTextBoxColumn W;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.TabPage tabPage3;
         private System.Windows.Forms.TextBox txtBox_mmCommand;
@@ -329,6 +330,14 @@
         private System.ComponentModel.BackgroundWorker backgroundWorker1;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.RichTextBox changelogDisplay;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Point;
+        private System.Windows.Forms.DataGridViewTextBoxColumn X;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Y;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Z;
+        private System.Windows.Forms.DataGridViewTextBoxColumn U;
+        private System.Windows.Forms.DataGridViewTextBoxColumn V;
+        private System.Windows.Forms.DataGridViewTextBoxColumn W;
+        private System.Windows.Forms.DataGridViewTextBoxColumn SprayerStatus;
     }
 }
 

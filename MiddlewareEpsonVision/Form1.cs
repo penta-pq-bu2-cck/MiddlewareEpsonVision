@@ -83,9 +83,9 @@ namespace MiddlewareEpsonVision
             });
             for (int i = 0; i < numberOfPoints; i++)
             {
-                int idx = startIndex + i * 6;
+                int idx = startIndex + i * 7;
 
-                if (idx + 5 > values.Length)
+                if (idx + 6 > values.Length)
                     throw new Exception("Not enough values for all points.");
 
                 points.Add(new RobotPoint
@@ -95,11 +95,12 @@ namespace MiddlewareEpsonVision
                     Z = float.Parse(values[idx + 2], CultureInfo.InvariantCulture),
                     U = float.Parse(values[idx + 3], CultureInfo.InvariantCulture),
                     V = float.Parse(values[idx + 4], CultureInfo.InvariantCulture),
-                    W = float.Parse(values[idx + 5], CultureInfo.InvariantCulture)
+                    W = float.Parse(values[idx + 5], CultureInfo.InvariantCulture),
+                    SprayStatus = int.Parse(values[idx + 6], CultureInfo.InvariantCulture)
                 });
 
                 UiLogger.Log($"P{i}: X={points[i].X:F3}, Y={points[i].Y:F3}, Z={points[i].Z:F3}, " +
-                    $"U={points[i].U:F3}, V={points[i].V:F3}, W={points[i].W:F3}");
+                    $"U={points[i].U:F3}, V={points[i].V:F3}, W={points[i].W:F3},SprayStatus={points[i].SprayStatus}");
                 SafeGrid(() =>
                     {
                     dataGridView1.Rows.Add(
@@ -109,7 +110,8 @@ namespace MiddlewareEpsonVision
                     $"{points[i].Z:F3}",
                     $"{points[i].U:F3}",
                     $"{points[i].V:F3}",
-                    $"{points[i].W:F3}"
+                    $"{points[i].W:F3}",
+                    $"{points[i].SprayStatus}"
                     );
                 });
             }
@@ -206,8 +208,8 @@ namespace MiddlewareEpsonVision
 
                 string command = string.Format(
                      CultureInfo.InvariantCulture,
-                    "Move,{0:F3},{1:F3},{2:F3},{3:F3},{4:F3},{5:F3}",
-                     p.X, p.Y, p.Z, p.U, p.V, p.W
+                    "Move,{0:F3},{1:F3},{2:F3},{3:F3},{4:F3},{5:F3},{6}",
+                     p.X, p.Y, p.Z, p.U, p.V, p.W,p.SprayStatus
                       );
     
 

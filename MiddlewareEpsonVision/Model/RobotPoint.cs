@@ -14,5 +14,6 @@ namespace MiddlewareEpsonVision
         public float U { get; set; }
         public float V { get; set; }
         public float W { get; set; }
+        public int SprayStatus { get; set; }
     }
 }
