@@ -102,7 +102,7 @@ namespace MiddlewareEpsonVision
                     U = float.Parse(values[idx + 3], CultureInfo.InvariantCulture),
                     V = float.Parse(values[idx + 4], CultureInfo.InvariantCulture),
                     W = float.Parse(values[idx + 5], CultureInfo.InvariantCulture),
-                    SprayStatus = float.Parse(values[idx + 6], CultureInfo.InvariantCulture)
+                    SprayStatus = int.Parse(values[idx + 6], CultureInfo.InvariantCulture)
                 });
 
                 UiLogger.Log($"P{i}: X={points[i].X:F3}, Y={points[i].Y:F3}, Z={points[i].Z:F3}, " +
@@ -117,7 +117,7 @@ namespace MiddlewareEpsonVision
                     $"{points[i].U:F3}",
                     $"{points[i].V:F3}",
                     $"{points[i].W:F3}",
-                    $"{points[i].SprayStatus}"
+                    $"{points[i].PointStatus}"
                     );
                 });
             }
