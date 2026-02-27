@@ -245,8 +245,9 @@ namespace MiddlewareEpsonVision
                         sent[4] == recv[4] &&
                         sent[5] == recv[5];
                 }
-                 while (!tcpAckBool);
-                
+               //  while (!tcpAckBool);
+                while (false) ;
+
             }
 
             UiLogger.Log("✔ All robot points sending finished");
@@ -335,9 +336,10 @@ namespace MiddlewareEpsonVision
                             string msg1 = _robotServer.Listen(); // will throw if client disconnects
 
                             if (msg1 == "getmovecommand")
-
                             {
+                                UiLogger.Log($"← Robot:{msg1}");
                                 _robotServer.Send(movecommand_ToRobot);
+                                UiLogger.Log($"→ Robot:{movecommand_ToRobot}");
                             }
                         }
                     }
@@ -423,8 +425,8 @@ namespace MiddlewareEpsonVision
         {
             string[] parts = msg.Trim().Split(',');
 
-            if (parts.Length != 8 || !parts[0].Equals("Move", StringComparison.OrdinalIgnoreCase))
-                throw new Exception("Invalid MOVE command: " + msg);
+            if (parts.Length != 8 || !parts[0].Equals("Save", StringComparison.OrdinalIgnoreCase))
+                throw new Exception("Invalid Save command: " + msg);
 
                return new decimal[]
                 {
@@ -442,7 +444,7 @@ namespace MiddlewareEpsonVision
             string[] parts = msg.Trim().Split(',');
 
             if (parts.Length != 8 || !parts[0].Equals("Ack", StringComparison.OrdinalIgnoreCase))
-                throw new Exception("Invalid MOVE command: " + msg);
+                throw new Exception("Invalid SAVE command: " + msg);
 
             return new decimal[]
              {

@@ -1,57 +1,65 @@
-﻿using System;
+﻿using MiddlewareEpsonVision;
+using System;
 using System.Collections.Generic;
 
-namespace MiddlewareEpsonVision
+public class PointListHandler
 {
-    public class PointListHandler
+    private static readonly Dictionary<int, int> PathStartToEndMap =
+        new Dictionary<int, int>
     {
-        public string BuildCommand(List<RobotPoint> points)
+        { 101, 102 },
+        { 201, 202 }
+    };
+
+    public string BuildCommand(List<RobotPoint> points)
+    {
+        if (points == null || points.Count == 0)
+            return string.Empty;
+
+        List<string> result = new List<string>();
+        int i = 0;
+
+        while (i < points.Count)
         {
-            if (points == null || points.Count == 0)
-                return string.Empty;
+            int status = points[i].PointStatus;
 
-            List<string> result = new List<string>();
-            int i = 0;
-
-            while (i < points.Count)
+            // Normal point
+            if (status == 0)
             {
-                int status = points[i].PointStatus;
-
-                if (status == 0)
-                {
-                    result.Add($"{i}:{i}");
-                    i++;
-                }
-                else if (status == 101 || status == 201)
-                {
-                    int start = i;
-                    int expectedEnd = (status == 101) ? 102 : 202;
-
-                    int j = i + 1;
-                    bool found = false;
-
-                    while (j < points.Count)
-                    {
-                        if (points[j].PointStatus == expectedEnd)
-                        {
-                            result.Add($"{start}:{j}");
-                            i = j + 1;
-                            found = true;
-                            break;
-                        }
-                        j++;
-                    }
-
-                    if (!found)
-                        throw new Exception($"Path starting at P{start} not closed");
-                }
-                else
-                {
-                    i++;
-                }
+                result.Add($"{i}:{i}");
+                i++;
+                continue;
             }
 
-            return string.Join(",", result);
+            // Path start detection
+            if (PathStartToEndMap.TryGetValue(status, out int expectedEnd))
+            {
+                int start = i;
+                int j = i + 1;
+                bool found = false;
+
+                while (j < points.Count)
+                {
+                    if (points[j].PointStatus == expectedEnd)
+                    {
+                        result.Add($"{start}:{j}");
+                        i = j + 1;
+                        found = true;
+                        break;
+                    }
+                    j++;
+                }
+
+                if (!found)
+                    throw new Exception($"Path starting at P{start} not closed");
+
+                continue;
+            }
+
+            // Skip middle markers (100, 200, etc.)
+            i++;
         }
+
+        return string.Join(",", result);
     }
 }
