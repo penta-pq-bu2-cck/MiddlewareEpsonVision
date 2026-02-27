@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="HttpServercs.cs" />
     <Compile Include="Model\RobotPoint.cs" />
+    <Compile Include="PointListHandler.cs" />
     <Compile Include="UiLogger.cs" />
     <Compile Include="MechMindTCPClient.cs" />
     <Compile Include="Program.cs" />

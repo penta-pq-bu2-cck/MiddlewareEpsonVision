@@ -56,11 +56,13 @@ namespace MiddlewareEpsonVision
             // 2️. Parse points
             List<RobotPoint> points = ParseRawData(rawData);
 
-           // MiddlewareEpsonVision.PointListHandler handler = new MiddlewareEpsonVision.PointListHandler();
+            PointListHandler handler = new PointListHandler();
 
-           // string command = handler.BuildCommand(points);
+            string command = handler.BuildCommand(points);
 
-           // Console.WriteLine(command);
+            Console.WriteLine(command);
+
+            UiLogger.Log(command);
 
             // 3️. Write to .pts file
             string ptsFile = Path.Combine(AppContext.BaseDirectory, "robot1.pts");
@@ -102,11 +104,11 @@ namespace MiddlewareEpsonVision
                     U = float.Parse(values[idx + 3], CultureInfo.InvariantCulture),
                     V = float.Parse(values[idx + 4], CultureInfo.InvariantCulture),
                     W = float.Parse(values[idx + 5], CultureInfo.InvariantCulture),
-                    SprayStatus = int.Parse(values[idx + 6], CultureInfo.InvariantCulture)
+                    PointStatus = int.Parse(values[idx + 6], CultureInfo.InvariantCulture)
                 });
 
                 UiLogger.Log($"P{i}: X={points[i].X:F3}, Y={points[i].Y:F3}, Z={points[i].Z:F3}, " +
-                    $"U={points[i].U:F3}, V={points[i].V:F3}, W={points[i].W:F3},SprayStatus={points[i].SprayStatus}");
+                    $"U={points[i].U:F3}, V={points[i].V:F3}, W={points[i].W:F3},SprayStatus={points[i].PointStatus}");
                 SafeGrid(() =>
                     {
                     dataGridView1.Rows.Add(
@@ -215,7 +217,7 @@ namespace MiddlewareEpsonVision
                 string command = string.Format(
                      CultureInfo.InvariantCulture,
                     "Move,{0:F3},{1:F3},{2:F3},{3:F3},{4:F3},{5:F3},{6}",
-                     p.X, p.Y, p.Z, p.U, p.V, p.W,p.SprayStatus
+                     p.X, p.Y, p.Z, p.U, p.V, p.W,p.PointStatus
                       );
     
 
