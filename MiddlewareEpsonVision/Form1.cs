@@ -56,6 +56,12 @@ namespace MiddlewareEpsonVision
             // 2️. Parse points
             List<RobotPoint> points = ParseRawData(rawData);
 
+           // MiddlewareEpsonVision.PointListHandler handler = new MiddlewareEpsonVision.PointListHandler();
+
+           // string command = handler.BuildCommand(points);
+
+           // Console.WriteLine(command);
+
             // 3️. Write to .pts file
             string ptsFile = Path.Combine(AppContext.BaseDirectory, "robot1.pts");
             WritePointsToPts(points, ptsFile);
