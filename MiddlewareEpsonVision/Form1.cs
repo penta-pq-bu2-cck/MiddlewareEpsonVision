@@ -20,6 +20,7 @@ namespace MiddlewareEpsonVision
     {
         private Spel m_spel;
         private TcpServer _robotServer;
+        string movecommand_ToRobot;
 
 
         public Form1()
@@ -58,11 +59,11 @@ namespace MiddlewareEpsonVision
 
             PointListHandler handler = new PointListHandler();
 
-            string command = handler.BuildCommand(points);
+            movecommand_ToRobot = handler.BuildCommand(points);
 
-            Console.WriteLine(command);
+            Console.WriteLine(movecommand_ToRobot);
 
-            UiLogger.Log(command);
+            UiLogger.Log(movecommand_ToRobot);
 
             // 3️. Write to .pts file
             string ptsFile = Path.Combine(AppContext.BaseDirectory, "robot1.pts");
@@ -325,7 +326,19 @@ namespace MiddlewareEpsonVision
 
                     if (cmdArray.Length > 0 && cmdArray[0] == "gettoolpath")
                     {
-                        HandleGetToolPath(cmdArray);
+                        // HandleGetToolPath(cmdArray);
+                        _robotServer.Send("gettoolpath,1");
+
+                        while (true)
+                        {
+                            string msg1 = _robotServer.Listen(); // will throw if client disconnects
+
+                            if (msg1 == "getmovecommand")
+
+                            {
+                                _robotServer.Send(movecommand_ToRobot);
+                            }
+                        }
                     }
                 }
             }
