@@ -19,7 +19,7 @@ namespace MiddlewareEpsonVision
 
                 if (status == 0)
                 {
-                    result.Add($"P{i}:P{i}");
+                    result.Add($"{i}:{i}");
                     i++;
                 }
                 else if (status == 101 || status == 201)
@@ -34,7 +34,7 @@ namespace MiddlewareEpsonVision
                     {
                         if (points[j].PointStatus == expectedEnd)
                         {
-                            result.Add($"P{start}:P{j}");
+                            result.Add($"{start}:{j}");
                             i = j + 1;
                             found = true;
                             break;

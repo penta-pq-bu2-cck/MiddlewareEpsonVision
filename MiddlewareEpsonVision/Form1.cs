@@ -63,7 +63,7 @@ namespace MiddlewareEpsonVision
 
             Console.WriteLine(movecommand_ToRobot);
 
-            UiLogger.Log(movecommand_ToRobot);
+            UiLogger.Log($"MoveCommand generated: {movecommand_ToRobot}");
 
             // 3️. Write to .pts file
             string ptsFile = Path.Combine(AppContext.BaseDirectory, "robot1.pts");
@@ -217,7 +217,7 @@ namespace MiddlewareEpsonVision
 
                 string command = string.Format(
                      CultureInfo.InvariantCulture,
-                    "Move,{0:F3},{1:F3},{2:F3},{3:F3},{4:F3},{5:F3},{6}",
+                    "Save,{0:F3},{1:F3},{2:F3},{3:F3},{4:F3},{5:F3},{6}",
                      p.X, p.Y, p.Z, p.U, p.V, p.W,p.PointStatus
                       );
     
@@ -245,10 +245,11 @@ namespace MiddlewareEpsonVision
                         sent[4] == recv[4] &&
                         sent[5] == recv[5];
                 }
-                while (!tcpAckBool);
+                 while (!tcpAckBool);
+                
             }
 
-            UiLogger.Log("✔ All robot points executed");
+            UiLogger.Log("✔ All robot points sending finished");
             server.Send("End,1");
         }
 
@@ -326,8 +327,8 @@ namespace MiddlewareEpsonVision
 
                     if (cmdArray.Length > 0 && cmdArray[0] == "gettoolpath")
                     {
-                        // HandleGetToolPath(cmdArray);
-                        _robotServer.Send("gettoolpath,1");
+                         HandleGetToolPath(cmdArray);
+                        
 
                         while (true)
                         {
@@ -396,6 +397,12 @@ namespace MiddlewareEpsonVision
                 ///*************************************************************************************************                UiLogger.Log("Vision data length: " + rawData.Length);
 
                 List<RobotPoint> points = ParseRawData(rawData);
+
+                PointListHandler handler = new PointListHandler();
+
+                movecommand_ToRobot = handler.BuildCommand(points);
+
+                UiLogger.Log($"MoveCommand Generated: {movecommand_ToRobot}");
 
                 string ptsFile = Path.Combine(AppContext.BaseDirectory, "robot1_VP.pts");
 
