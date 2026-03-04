@@ -288,6 +288,7 @@ namespace MiddlewareEpsonVision
 
         private void Form1_Load(object sender, EventArgs e)
         {
+
             backgroundWorker1.RunWorkerAsync();
 
             try
@@ -318,6 +319,8 @@ namespace MiddlewareEpsonVision
                 _robotServer.Start(410);
 
                 UiLogger.Log("TCP Robot Server started on port 410");
+
+
 
                 while (true)
                 {
@@ -375,18 +378,19 @@ namespace MiddlewareEpsonVision
                 //).GetAwaiter().GetResult();
 
                 //client.SendAsync(
-                //    $"200,0,0,1,{string.Join(",", cmdArray.Skip(1))}"
+                //    $"100,0,0,1,{string.Join(",", cmdArray.Skip(1))}"
                 //).GetAwaiter().GetResult();
 
-                //string rawData = client.ReceiveAsync()
+                //string vision_ReplyStatus = client.ReceiveAsync()
                 //                       .GetAwaiter().GetResult();
 
+                //if the vision reply is success, then will need to read the output txt file (quaternion point) and send it to CAD Team
                 //client.Close();
                 ///*************************************************************************************************
                 ///
                 //////////////////***Option 2: Test using Raw Data File*******************************////////////////
                 ///*************************************************************************************************
-          
+
                 string filePath = Path.Combine(AppContext.BaseDirectory, "rawData.txt");
                 if (!File.Exists(filePath))
                 {

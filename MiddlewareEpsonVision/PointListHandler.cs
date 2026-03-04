@@ -8,7 +8,7 @@ public class PointListHandler
         new Dictionary<int, int>
     {
         { 101, 102 },
-        { 201, 202 }
+        { 201, 202 },
     };
 
     public string BuildCommand(List<RobotPoint> points)
@@ -33,7 +33,8 @@ public class PointListHandler
 
             // Path start detection
             if (PathStartToEndMap.TryGetValue(status, out int expectedEnd))
-            {
+            
+                {
                 int start = i;
                 int j = i + 1;
                 bool found = false;
