@@ -1,4 +1,6 @@
-﻿using RCAPINet;
+﻿using Microsoft.VisualBasic;
+using MqttClientApp;
+using RCAPINet;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -21,12 +23,21 @@ namespace MiddlewareEpsonVision
         private Spel m_spel;
         private TcpServer _robotServer;
         string movecommand_ToRobot;
+        private MqttService _mqtt;
 
 
         public Form1()
         {
             InitializeComponent();
             UiLogger.Initialize(textBox1);
+            _mqtt = new MqttService(
+                broker: "broker.hivemq.com",
+                port: 1883,
+                clientId: "Penta_MiddleWare"
+            );
+
+
+
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -286,10 +297,23 @@ namespace MiddlewareEpsonVision
             }
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
 
             backgroundWorker1.RunWorkerAsync();
+
+            try
+            {
+                await _mqtt.ConnectAsync();
+
+                // Subscribe after connected
+               // await _mqtt.SubscribeAsync("Glazing/To_MiddleWare/#");      // wildcard
+             
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("MQTT connect failed: " + ex.Message);
+            }
 
             try
             {
@@ -362,45 +386,80 @@ namespace MiddlewareEpsonVision
             }
         }
 
-        private void HandleGetToolPath(string[] cmdArray)
+        private async void HandleGetToolPath(string[] cmdArray)
         {
             _robotServer.Send("gettoolpath,1");
 
             try
             {
                 //////////////////***Option 1: Test using Mindmech vision*******************************////////////////
-                ///*************************************************************************************************
+
+                ///Step 1: Key in the Denture ID *************************************************************************************************
+
+                string dentureID = Interaction.InputBox(
+                    "Enter the Denture ID:",
+                    "Denture ID Input Box",
+                    "Example: 123");
+
+                //FindAndCopyStl(dentureID);
+
+                ///Step 2: From Mindmech Vision to Middleman *************************************************************************************************
                 //var client = new MechMindTcpClient();
 
                 //client.ConnectAsync(
-                //    txtBox_mmIP.Text,
-                //    int.Parse(txtBox_mmPort.Text)
-                //).GetAwaiter().GetResult();
+                //     txtBox_mmIP.Text,
+                //     int.Parse(txtBox_mmPort.Text)
+                // ).GetAwaiter().GetResult();
 
-                //client.SendAsync(
-                //    $"100,0,0,1,{string.Join(",", cmdArray.Skip(1))}"
-                //).GetAwaiter().GetResult();
+                //  client.SendAsync(
+                // $"100,0,0,1,{string.Join(",", cmdArray.Skip(1))}"
+                //     "100,0,0,1,J1,J2,J3,J4,J5,J6,X,Y,Z,U,V,W"
+                //  ).GetAwaiter().GetResult();
 
-                //string vision_ReplyStatus = client.ReceiveAsync()
+                // string vision_ReplyStatus = client.ReceiveAsync()
                 //                       .GetAwaiter().GetResult();
+
+                //  string quaternionPointData = vision_ReplyStatus;
+                //Assuming the vision reply is in format: "200,0,0,1,Success" or "200,0,0,1,Fail"
 
                 //if the vision reply is success, then will need to read the output txt file (quaternion point) and send it to CAD Team
                 //client.Close();
+
+                ///Step 3: From Middleman to CAD Team Via MQTT *************************************************************************************************
+
+                // Step 3.1~3.4 handled inside PublishAndWaitReplyAsync automatically
+                string rawData = await _mqtt.PublishAndWaitReplyAsync(
+                    publishTopic: "Glazing/From_MiddleWare",
+                    payload: dentureID,
+                    replyTopic: "Glazing/To_MiddleWare",
+                    timeoutMs: 999999999
+                );
+
+                // Step 3.5 — check result then continue
+                if (rawData == null)
+                {
+                    MessageBox.Show("No reply received. Middleware timeout.");
+                    return;
+                }
+
+                // Step 6 - handle the reply data (rawData) from CAD Team, which should be the same raw data format as before, then parse and update to robot
+                UiLogger.Log("Receive Raw Data: " + rawData);
+
                 ///*************************************************************************************************
                 ///
                 //////////////////***Option 2: Test using Raw Data File*******************************////////////////
                 ///*************************************************************************************************
 
-                string filePath = Path.Combine(AppContext.BaseDirectory, "rawData.txt");
-                if (!File.Exists(filePath))
-                {
-                    MessageBox.Show("File not found: " + filePath);
-                    return;
-                }
+                //string filePath = Path.Combine(AppContext.BaseDirectory, "rawData.txt");
+                //if (!File.Exists(filePath))
+                //{
+                //    MessageBox.Show("File not found: " + filePath);
+                //    return;
+                //}
 
-                string rawData = File.ReadAllText(filePath).Trim();
+                //string rawData = File.ReadAllText(filePath).Trim();
 
-                ///*************************************************************************************************                UiLogger.Log("Vision data length: " + rawData.Length);
+                /////*************************************************************************************************                UiLogger.Log("Vision data length: " + rawData.Length);
 
                 List<RobotPoint> points = ParseRawData(rawData);
 
@@ -484,5 +543,73 @@ namespace MiddlewareEpsonVision
             backgroundWorker1.RunWorkerCompleted += backgroundWorker1_RunWorkerCompleted;
             backgroundWorker1.RunWorkerAsync();
         }
+
+        public void FindAndCopyStl(string dentureID)
+        {
+            string searchFolder = @"C:\STL\Folder"; // Folder to search for STL files
+            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+
+            try
+            {
+                // Search pattern: *-*-{dentureID}_denture_for_toolpath.stl
+                string pattern = $"*-*-{dentureID}_denture_for_toolpath.stl";
+
+                var file = Directory
+                    .GetFiles(searchFolder, pattern, SearchOption.TopDirectoryOnly)
+                    .FirstOrDefault();
+
+                if (file == null)
+                {
+                    MessageBox.Show("STL file not found.");
+                    return;
+                }
+
+                string destinationPath = Path.Combine(desktopPath, Path.GetFileName(file));
+
+                File.Copy(file, destinationPath, true); // true = overwrite if exists
+
+                MessageBox.Show("File copied to Desktop successfully!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private async void RunProcessFlow(string rawData)
+        {
+            try
+            {
+                // 1. Publish raw data to CAD Team via MQTT
+                // 2. Await reply on the subscribe topic — execution STOPS here until
+                //    a message arrives on "Glazing/To_MiddleWare" or timeout hits
+                string reply = await _mqtt.PublishAndWaitReplyAsync(
+                    publishTopic: "Glazing/To_MiddleWare",   // send raw data here
+                    payload: rawData,
+                    replyTopic: "Glazing/To_MiddleWare",     // wait for reply here
+                    timeoutMs: 60000                          // 5 second timeout
+                );
+
+                // 3. Check timeout
+                if (reply == null)
+                {
+                    MessageBox.Show("No reply from CAD Team within 60 seconds.");
+                    return;
+                }
+
+             
+                MessageBox.Show("Reply received: " + reply);
+
+               
+               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Process flow error: " + ex.Message);
+            }
+        }
+
+
+
     }
 }
